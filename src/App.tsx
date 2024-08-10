@@ -12,31 +12,44 @@ export default function App() {
   dayjs.extend(customParseFormat);
   dayjs.extend(weekday);
 
-  const [selected, setSelected] = useState([]);
+  interface FinalItem {
+    day: string;
+    weekIndex: 0 | 2 | 1 | 3 | 4 | 5 | 6;
+    name: string;
+  }
 
-  const [startDate, setStartDate] = useState(dayjs().format("YYYY-MM-DD"));
-  const [endDate, setEndDate] = useState(
+  const [selected, setSelected] = useState<number[]>([]);
+
+  const [startDate, setStartDate] = useState<string>(
+    dayjs().format("YYYY-MM-DD")
+  );
+  const [endDate, setEndDate] = useState<string>(
     dayjs().add(7, "days").format("YYYY-MM-DD")
   );
 
-  const [arrDays, setArrDays] = useState(null);
-  const [finalArr, setFinalArr] = useState(null);
+  const [arrDays, setArrDays] = useState<string[]>([]);
+  const [finalArr, setFinalArr] = useState<FinalItem[]>([]);
 
-  const formatDataToFinal = (arr: Array<[]>) => {
+  const formatDataToFinal = (arr: string[]) => {
     return arr
       .map((day) => {
-        if (selected.includes(dayjs(day, "DD-MM-YYYY").day())) {
+        if (selected.includes(dayjs(`${day}`, "DD-MM-YYYY").day())) {
           return {
-            day,
-            weekIndex: dayjs(day, "DD-MM-YYYY").day(),
-            name: dayjs(day, "DD-MM-YYYY").format("dddd"),
+            day: `${day}`,
+            weekIndex: dayjs(`${day}`, "DD-MM-YYYY").day(),
+            name: dayjs(`${day}`, "DD-MM-YYYY").format("dddd"),
           };
         } else {
-          return undefined;
+          return null;
         }
       })
-      .filter((item) => item != undefined)
-      .sort((a, b) => a?.weekIndex - b?.weekIndex);
+      .filter((item): item is FinalItem => item !== null && item !== undefined)
+      .sort((a, b) => {
+        if (a && b) {
+          return a.weekIndex - b.weekIndex;
+        }
+        return a ? Number.MAX_SAFE_INTEGER : b ? Number.MIN_SAFE_INTEGER : 0;
+      });
   };
 
   const getDatesBetween = (startStr: string, endStr: string) => {
@@ -64,7 +77,8 @@ export default function App() {
   }, [startDate, endDate]);
 
   useEffect(() => {
-    if (arrDays) setFinalArr(formatDataToFinal(arrDays));
+    if (arrDays && selected && Array.isArray(selected))
+      setFinalArr(formatDataToFinal(arrDays));
   }, [arrDays, selected]);
 
   return (
@@ -102,7 +116,7 @@ export default function App() {
             name="scales"
             onClick={() => {
               if (selected.includes(num)) {
-                setSelected([...selected].filter((item) => item != num));
+                setSelected([...selected].filter((item) => +item != +num));
               } else {
                 setSelected([...selected, num]);
               }
@@ -114,10 +128,13 @@ export default function App() {
       <br />
       <div>
         {finalArr && Array.isArray(finalArr)
-          ? finalArr.map((item, index) => (
-              <h3>
-                {index} - {item.day}
-              </h3>
+          ? finalArr.map((item: FinalItem, index: number) => (
+              <>
+                <h3>{item.day}</h3>
+                <button type="button" onClick={() => console.log(item)}>
+                  {index}
+                </button>
+              </>
             ))
           : null}
       </div>
