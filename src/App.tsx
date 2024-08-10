@@ -5,18 +5,14 @@ import weekday from "dayjs/plugin/weekday";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import "dayjs/locale/pt";
 import { useEffect, useState } from "react";
+import { FinalItem } from "./utils/interfaces";
+import Results from "./components/Results";
 
 export default function App() {
   dayjs.locale("pt");
   dayjs.extend(localeData);
   dayjs.extend(customParseFormat);
   dayjs.extend(weekday);
-
-  interface FinalItem {
-    day: string;
-    weekIndex: 0 | 2 | 1 | 3 | 4 | 5 | 6;
-    name: string;
-  }
 
   const [selected, setSelected] = useState<number[]>([]);
 
@@ -126,18 +122,7 @@ export default function App() {
         </label>
       ))}
       <br />
-      <div>
-        {finalArr && Array.isArray(finalArr)
-          ? finalArr.map((item: FinalItem, index: number) => (
-              <>
-                <h3>{item.day}</h3>
-                <button type="button" onClick={() => console.log(item)}>
-                  {index}
-                </button>
-              </>
-            ))
-          : null}
-      </div>
+      <Results finalArr={finalArr} />
     </div>
   );
 }
