@@ -3,6 +3,7 @@
         "./src/**/*",
         "./src/**/*",
         "./src/**/*.d.ts",
+        "./src/types/styles.d.ts"
     ],
     "compilerOptions": {
         "strict": true,
