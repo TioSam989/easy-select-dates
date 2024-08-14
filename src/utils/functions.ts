@@ -42,3 +42,5 @@ export const formatDataToFinal = (arr: string[], selected: number[]) => {
             return a ? Number.MAX_SAFE_INTEGER : b ? Number.MIN_SAFE_INTEGER : 0;
         });
 };
+
+export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
