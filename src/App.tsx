@@ -28,13 +28,9 @@ export default function App() {
 
   return (
     <Background>
-      <div className="App">
-        <InputData startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
-        <br />
-        <DaysComponents selected={selected} setSelected={setSelected} />
-        <br />
-        <Results arrDays={arrDays} selected={selected} />
-      </div>
+      <InputData startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
+      <DaysComponents selected={selected} setSelected={setSelected} />
+      <Results arrDays={arrDays} selected={selected} />
     </Background>
   );
 }
