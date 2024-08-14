@@ -1,25 +1,29 @@
 import dayjs from "dayjs";
 import React from "react";
 import { DaysComponentProps } from "../../utils/interfaces";
+import { capitalizeFirstLetter } from "../../utils/functions";
 
 const DaysComponents: React.FC<DaysComponentProps> = ({ selected, setSelected }) => {
+
+    const weekDays = dayjs.weekdays()
+
     return (
         <>
-            {[0, 1, 2, 3, 4, 5, 6].map((num) => (
-                <label>
-                    {dayjs().day(num).format("ddd")}
+            {weekDays.map((name, index) => (
+                <label key={index} >
+                    {capitalizeFirstLetter(name)}
                     <input
                         type="checkbox"
-                        id="scales"
+                        id={`scale-${index}`}
                         name="scales"
                         onClick={() => {
-                            if (selected.includes(num)) {
-                                setSelected([...selected].filter((item) => +item != +num));
+                            if (selected.includes(index)) {
+                                setSelected([...selected].filter((item) => +item != +index));
                             } else {
-                                setSelected([...selected, num]);
+                                setSelected([...selected, index]);
                             }
                         }}
-                        checked={selected.includes(num)}
+                        checked={selected.includes(index)}
                     />
                 </label>
             ))}
